@@ -32,7 +32,7 @@ Parameter berikut dapat diubah melalui file `values.yaml` atau dengan flag `--se
 
 | Parameter | Deskripsi | Default |
 | :--- | :--- | :--- |
-| `replicaCount` | Jumlah replika pod yang akan dijalankan. | `2` |
+| `replicaCount` | Jumlah replika pod yang akan dijalankan. | `4` |
 | `image.repository`| Alamat image di Harbor Registry. | `harbor.mydomain.com/linkhub/backend` |
 | `image.tag`| Tag image yang akan di-deploy (biasanya diisi CI/CD). | `""` |
 | `ingress.enabled`| Aktifkan atau non-aktifkan pembuatan Ingress. | `true` |
