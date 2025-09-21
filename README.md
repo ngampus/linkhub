@@ -1,106 +1,40 @@
 # linkhub
 PT Data Integrasi Inovasi
-# LinkHub Deployment Architecture
+# Helm Chart untuk Aplikasi Backend LinkHub
 
-This repository contains the detailed infrastructure and deployment architecture for the LinkHub application, a cloud-native, scalable, and resilient aggregator link service built using Kubernetes and related best practices.
+Chart ini mengelola deployment aplikasi Backend (Go API) untuk proyek LinkHub di atas Kubernetes.
 
----
+## Desain Arsitektur
 
-## Architecture Overview
+Infrastruktur ini dirancang untuk aman dan andal dengan menempatkan cluster Kubernetes di dalam jaringan privat. Akses masuk dikelola oleh Load Balancer dan Traefik Ingress, sementara akses keluar menggunakan NAT Gateway. Monitoring dilakukan oleh Prometheus dan Grafana.
 
-The infrastructure leverages the following key open-source components and cloud-native patterns:
+## Prasyarat
 
-- **GitHub**: Source code repository.
-- **Jenkins**: CI/CD automation for build, test, and deploy pipelines.
-- **Cloudflare**: Edge DNS and DDoS protection.
-- **Docker & Harbor**: Containerization and secure registry management.
-- **Helm**: Kubernetes package management and templating.
-- **Kubernetes**: Orchestration platform managing stateless pods.
-- **Traefik**: Dynamic ingress controller managing incoming HTTP/HTTPS traffic.
-- **Bastion Host**: Secure administrative entry to cluster nodes.
+- Kubernetes 1.19+
+- Helm 3.2+
+- Traefik sudah terpasang sebagai Ingress Controller di cluster.
 
-The cluster and pods are deployed inside a private subnet protected by NAT Gateway and layered with security best practices.
+## Cara Instalasi
 
-Cluster traffic routing, auto-scaling, and zero-downtime deployments are key features supported.
+1.  Clone repository chart ini.
+2.  Sesuaikan parameter di dalam file `values.yaml` sesuai kebutuhan lingkungan Anda.
+3.  Jalankan perintah berikut untuk melakukan instalasi atau upgrade.
 
----
+    ```bash
+    helm upgrade --install linkhub-backend . \
+      --namespace linkhub-prod \
+      --set image.tag="v1.2.5"
+    ```
 
-## Key Features
+## Konfigurasi
 
-### Scalability
-- Horizontal Pod Autoscaling enabled to dynamically adjust pod counts.
-- Stateless microservices allow for efficient replication and scaling.
-- Infrastructure supports seamless worker node additions for capacity.
+Parameter berikut dapat diubah melalui file `values.yaml` atau dengan flag `--set`.
 
-### Reliability
-- Multiple redundant pods ensure failover on individual pod failures.
-- Liveness and readiness probes monitor pod health and availability.
-- Load balancing via Traefik and Cloudflare to distribute client requests.
-
-### Availability
-- Kubernetes rolling updates provide zero downtime deployments.
-- Multi-zone deployment potential for higher availability SLAs.
-- Private subnet access restricts exposure of nodes to the internet.
-
-### Resiliency
-- Kubernetes self-healing automatically restarts malfunctioning pods.
-- Use NAT Gateway and private subnet for secure egress traffic.
-- Monitoring stack with Prometheus and Grafana enables proactive issue detection.
-
----
-
-## Deployment Pipeline
-
-1. Developers push code to GitHub repository.
-2. Jenkins CI/CD pipeline triggers build of Docker images.
-3. Built images are pushed and managed within Harbor registry.
-4. Helm chart templates package application definitions per environment.
-5. Helm deploys/updates applications onto Kubernetes cluster via API.
-6. Traefik ingress routes external traffic dynamically to deployed pods.
-
----
-
-## Security Design
-
-- Kubernetes nodes reside solely within private networking subnet.
-- Bastion host used as controlled access point for administrative tasks.
-- All external traffic flows through Cloudflare, Traefik, and Load Balancer.
-- Secrets management and role-based access control (RBAC) enforced on cluster.
-
----
-
-## Observability
-
-- Prometheus collects metrics from Kubernetes and application pods.
-- Grafana dashboards visualize performance and health.
-- Alerting setup notifies on resource exhaustion, failures, and anomalies.
-
----
-
-## How to Use
-
-- Clone the repository.
-- Follow Jenkins pipeline configuration documented inside `/ci` folder.
-- Customize Helm chart values for your environment.
-- Deploy Helm chart to Kubernetes using standard Helm CLI commands.
-- Monitor deployment using provided Grafana dashboards.
-
----
-
-## References
-
-- Kubernetes Documentation: https://kubernetes.io/docs/
-- Helm Charts: https://helm.sh/docs/
-- Jenkins User Guide: https://www.jenkins.io/doc/
-- Docker & Harbor: https://goharbor.io/
-- Traefik Ingress Controller: https://doc.traefik.io/traefik/
-
----
-
-## Contact
-
-For questions or assistance, reach out to the DevOps team.
-
----
-
-This architecture ensures LinkHub's online service remains stable, scalable, secure, and resilient to traffic spikes and failures, following cloud-native and Kubernetes best practices.
+| Parameter | Deskripsi | Default |
+| :--- | :--- | :--- |
+| `replicaCount` | Jumlah replika pod yang akan dijalankan. | `2` |
+| `image.repository`| Alamat image di Harbor Registry. | `harbor.mydomain.com/linkhub/backend` |
+| `image.tag`| Tag image yang akan di-deploy (biasanya diisi CI/CD). | `""` |
+| `ingress.enabled`| Aktifkan atau non-aktifkan pembuatan Ingress. | `true` |
+| `ingress.hosts`| Konfigurasi hostname dan path untuk Ingress. | `api.linkhub.com` |
+| `resources`| Alokasi resource CPU dan Memory untuk pod. | `{}` |
