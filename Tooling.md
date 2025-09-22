@@ -12,4 +12,3 @@ Berikut adalah daftar semua tools open-source yang dipilih untuk membangun dan m
 | **Prometheus** | Monitoring | Dibuat khusus untuk memantau lingkungan dinamis seperti Kubernetes. Model *pull-based* dan bahasa query PromQL sangat efektif. |
 | **Grafana** | Visualization | Alat visualisasi terbaik untuk metrik dari Prometheus. Memungkinkan pembuatan dashboard interaktif untuk pemantauan real-time dan alerting. |
 | **Cloudflare** | DNS & Security | Menyediakan lapisan keamanan pertama (DDoS, WAF), manajemen DNS global, dan CDN untuk mempercepat pengiriman aset Frontend. |
-| **NAT Gateway** | Egress Networking | Memberikan akses internet keluar untuk node di private subnet, sambil memastikan IP sumber yang statis dan menyembunyikan IP privat node. |
